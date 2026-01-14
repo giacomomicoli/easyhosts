@@ -40,10 +40,10 @@
     <Compile Include="ViewModels/SettingsViewModel.fs" />
     <Compile Include="ViewModels/LandingViewModel.fs" />
     <Compile Include="ViewModels/MainWindowViewModel.fs" />
+    <Compile Include="Views/HostRecordDialog.axaml.fs" />
     <Compile Include="Views/LandingView.axaml.fs" />
     <Compile Include="Views/ManageHostsView.axaml.fs" />
     <Compile Include="Views/SettingsView.axaml.fs" />
-    <Compile Include="Views/HostRecordDialog.axaml.fs" />
     <Compile Include="Views/MainWindow.axaml.fs" />
     <Compile Include="App.axaml.fs" />
     <Compile Include="Program.fs" />
