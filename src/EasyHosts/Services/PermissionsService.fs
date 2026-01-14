@@ -34,13 +34,16 @@ module PermissionsService =
     /// Restarts the application with elevated privileges
     let restartAsAdmin () : bool =
         try
-            let processInfo = ProcessStartInfo()
-            processInfo.UseShellExecute <- true
-            processInfo.FileName <- Environment.ProcessPath
-            processInfo.Verb <- "runas" // This triggers UAC prompt on Windows
-            
-            Process.Start(processInfo) |> ignore
-            true
+            match Environment.ProcessPath with
+            | null -> false
+            | processPath ->
+                let processInfo = ProcessStartInfo()
+                processInfo.UseShellExecute <- true
+                processInfo.FileName <- processPath
+                processInfo.Verb <- "runas" // This triggers UAC prompt on Windows
+                
+                Process.Start(processInfo) |> ignore
+                true
         with
         | _ -> false
     

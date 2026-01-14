@@ -30,65 +30,79 @@ type ManageHostsView() as this =
         clearErrorButton.Click.Add(this.OnClearErrorClick)
     
     member private this.GetViewModel() =
-        this.DataContext :?> ManageHostsViewModel
+        match this.DataContext with
+        | :? ManageHostsViewModel as vm -> Some vm
+        | _ -> None
     
     member private this.OnAddClick(e: RoutedEventArgs) =
         task {
             let dialog = HostRecordDialog()
             dialog.SetRecord(HostRecordViewModel.CreateNew())
             
-            let window = TopLevel.GetTopLevel(this) :?> Window
-            let! result = dialog.ShowDialog<bool>(window)
+            match TopLevel.GetTopLevel(this) with
+            | :? Window as window ->
+                let! result = dialog.ShowDialog<bool>(window)
+                let! result = dialog.ShowDialog<bool>(window)
             
-            if result then
-                let newRecord = dialog.GetRecord()
-                let vm = this.GetViewModel()
-                vm.AddRecord(newRecord) |> ignore
+                if result then
+                    let newRecord = dialog.GetRecord()
+                    match this.GetViewModel() with
+                    | Some vm -> vm.AddRecord(newRecord) |> ignore
+                    | None -> ()
+            | _ -> ()
         } |> ignore
     
     member private this.OnEditClick(e: RoutedEventArgs) =
-        let vm = this.GetViewModel()
-        match vm.SelectedRecord with
-        | Some selected ->
-            task {
-                let dialog = HostRecordDialog()
-                // Create a copy for editing
-                let editCopy = HostRecordViewModel({
-                    Id = selected.Id
-                    IpAddress = selected.IpAddress
-                    Hostname = selected.Hostname
-                    Comment = if String.IsNullOrEmpty(selected.Comment) then None else Some selected.Comment
-                    IsEnabled = selected.IsEnabled
-                })
-                dialog.SetRecord(editCopy)
-                
-                let window = TopLevel.GetTopLevel(this) :?> Window
-                let! result = dialog.ShowDialog<bool>(window)
-                
-                if result then
-                    let editedRecord = dialog.GetRecord()
-                    vm.UpdateRecord(editedRecord) |> ignore
-            } |> ignore
+        match this.GetViewModel() with
+        | Some vm ->
+            match vm.SelectedRecord with
+            | Some selected ->
+                task {
+                    let dialog = HostRecordDialog()
+                    // Create a copy for editing
+                    let editCopy = HostRecordViewModel({
+                        Id = selected.Id
+                        IpAddress = selected.IpAddress
+                        Hostname = selected.Hostname
+                        Comment = if String.IsNullOrEmpty(selected.Comment) then None else Some selected.Comment
+                        IsEnabled = selected.IsEnabled
+                    })
+                    dialog.SetRecord(editCopy)
+                    
+                    match TopLevel.GetTopLevel(this) with
+                    | :? Window as window ->
+                        let! result = dialog.ShowDialog<bool>(window)
+                        
+                        if result then
+                            let editedRecord = dialog.GetRecord()
+                            vm.UpdateRecord(editedRecord) |> ignore
+                    | _ -> ()
+                } |> ignore
+            | None -> ()
         | None -> ()
     
     member private this.OnRemoveClick(e: RoutedEventArgs) =
-        let vm = this.GetViewModel()
-        match vm.SelectedRecord with
-        | Some selected ->
-            vm.RemoveRecord(selected) |> ignore
+        match this.GetViewModel() with
+        | Some vm ->
+            match vm.SelectedRecord with
+            | Some selected -> vm.RemoveRecord(selected) |> ignore
+            | None -> ()
         | None -> ()
     
     member private this.OnToggleClick(e: RoutedEventArgs) =
-        let vm = this.GetViewModel()
-        match vm.SelectedRecord with
-        | Some selected ->
-            vm.ToggleRecord(selected) |> ignore
+        match this.GetViewModel() with
+        | Some vm ->
+            match vm.SelectedRecord with
+            | Some selected -> vm.ToggleRecord(selected) |> ignore
+            | None -> ()
         | None -> ()
     
     member private this.OnRefreshClick(e: RoutedEventArgs) =
-        let vm = this.GetViewModel()
-        vm.LoadRecords()
+        match this.GetViewModel() with
+        | Some vm -> vm.LoadRecords()
+        | None -> ()
     
     member private this.OnClearErrorClick(e: RoutedEventArgs) =
-        let vm = this.GetViewModel()
-        vm.ClearError()
+        match this.GetViewModel() with
+        | Some vm -> vm.ClearError()
+        | None -> ()

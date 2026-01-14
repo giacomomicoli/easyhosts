@@ -14,9 +14,11 @@ module SettingsService =
     
     /// Ensures the settings directory exists
     let private ensureSettingsDirectory () =
-        let dir = Path.GetDirectoryName(settingsFilePath)
-        if not (Directory.Exists(dir)) then
+        match Path.GetDirectoryName(settingsFilePath) with
+        | null -> ()
+        | dir when not (Directory.Exists(dir)) ->
             Directory.CreateDirectory(dir) |> ignore
+        | _ -> ()
     
     /// JSON serializer options
     let private jsonOptions = 
@@ -29,7 +31,9 @@ module SettingsService =
         try
             if File.Exists(settingsFilePath) then
                 let json = File.ReadAllText(settingsFilePath)
-                JsonSerializer.Deserialize<AppSettings>(json, jsonOptions)
+                match JsonSerializer.Deserialize<AppSettings>(json, jsonOptions) with
+                | null -> AppSettings.defaultSettings
+                | settings -> settings
             else
                 AppSettings.defaultSettings
         with

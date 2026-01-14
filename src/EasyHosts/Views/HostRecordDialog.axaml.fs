@@ -47,11 +47,11 @@ type HostRecordDialog() as this =
             | Ok _ ->
                 this.Close(true)
             | Error errors ->
-                let validationBorder = this.FindControl<Border>("ValidationBorder")
-                let validationMessage = this.FindControl<TextBlock>("ValidationMessage")
-                
-                let messages = errors |> List.map Validation.getErrorMessage |> String.concat "\n"
-                validationMessage.Text <- messages
-                validationBorder.IsVisible <- true
+                match this.FindControl<Border>("ValidationBorder"), this.FindControl<TextBlock>("ValidationMessage") with
+                | validationBorder, validationMessage when not (isNull validationBorder) && not (isNull validationMessage) ->
+                    let messages = errors |> List.map Validation.getErrorMessage |> String.concat "\n"
+                    validationMessage.Text <- messages
+                    validationBorder.IsVisible <- true
+                | _ -> ()
         | None ->
             this.Close(false)
