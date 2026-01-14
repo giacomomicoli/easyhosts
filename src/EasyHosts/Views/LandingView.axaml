@@ -1,0 +1,76 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:EasyHosts.ViewModels"
+             x:Class="EasyHosts.Views.LandingView"
+             x:DataType="vm:LandingViewModel">
+    
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="40" Spacing="24">
+            <!-- Header -->
+            <StackPanel HorizontalAlignment="Center" Spacing="8">
+                <TextBlock Text="{Binding AppName}" 
+                           FontSize="48" 
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"
+                           Foreground="{DynamicResource SystemAccentColor}"/>
+                <TextBlock Text="{Binding Version, StringFormat='Version {0}'}" 
+                           FontSize="14" 
+                           Opacity="0.7"
+                           HorizontalAlignment="Center"/>
+            </StackPanel>
+            
+            <!-- Description -->
+            <Border Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}"
+                    CornerRadius="8"
+                    Padding="24">
+                <TextBlock Text="{Binding Description}" 
+                           TextWrapping="Wrap"
+                           FontSize="16"
+                           LineHeight="24"/>
+            </Border>
+            
+            <!-- Features -->
+            <StackPanel Spacing="12">
+                <TextBlock Text="Features" 
+                           FontSize="24" 
+                           FontWeight="SemiBold"/>
+                
+                <ItemsControl ItemsSource="{Binding Features}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}"
+                                    CornerRadius="6"
+                                    Padding="16,12"
+                                    Margin="0,4">
+                                <TextBlock Text="{Binding}" 
+                                           FontSize="14"/>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+            
+            <!-- Quick Start -->
+            <Border Background="{DynamicResource SystemAccentColorLight3}"
+                    CornerRadius="8"
+                    Padding="24">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="🚀 Quick Start" 
+                               FontSize="18" 
+                               FontWeight="SemiBold"/>
+                    <TextBlock Text="{Binding QuickStart}" 
+                               TextWrapping="Wrap"
+                               FontSize="14"
+                               LineHeight="22"/>
+                </StackPanel>
+            </Border>
+            
+            <!-- Footer -->
+            <TextBlock Text="{Binding Copyright}" 
+                       HorizontalAlignment="Center"
+                       Opacity="0.5"
+                       FontSize="12"
+                       Margin="0,20,0,0"/>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

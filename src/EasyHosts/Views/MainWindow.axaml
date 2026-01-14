@@ -1,0 +1,34 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:EasyHosts.ViewModels"
+        xmlns:views="using:EasyHosts.Views"
+        x:Class="EasyHosts.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="{Binding Title}"
+        Width="900"
+        Height="650"
+        MinWidth="700"
+        MinHeight="500"
+        WindowStartupLocation="CenterScreen">
+    
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+    
+    <TabControl SelectedIndex="{Binding SelectedTabIndex}">
+        <!-- Landing Tab -->
+        <TabItem Header="🏠 Home">
+            <views:LandingView DataContext="{Binding LandingViewModel}"/>
+        </TabItem>
+        
+        <!-- Manage Hosts Tab -->
+        <TabItem Header="📋 Manage Hosts">
+            <views:ManageHostsView DataContext="{Binding ManageHostsViewModel}"/>
+        </TabItem>
+        
+        <!-- Settings Tab -->
+        <TabItem Header="⚙️ Settings">
+            <views:SettingsView DataContext="{Binding SettingsViewModel}"/>
+        </TabItem>
+    </TabControl>
+</Window>

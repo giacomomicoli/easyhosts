@@ -1,0 +1,51 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <!-- Single-file executable settings (RuntimeIdentifier specified at publish time) -->
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>true</SelfContained>
+    <PublishTrimmed>false</PublishTrimmed>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.2.0" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.2.0" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.0" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.0" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="11.2.0" />
+    <PackageReference Include="Avalonia.Diagnostics" Version="11.2.0" Condition="'$(Configuration)' == 'Debug'" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- F# source files in compilation order -->
+    <Compile Include="Domain/Types.fs" />
+    <Compile Include="Domain/Validation.fs" />
+    <Compile Include="Services/HostFileService.fs" />
+    <Compile Include="Services/BackupService.fs" />
+    <Compile Include="Services/PermissionsService.fs" />
+    <Compile Include="Services/SettingsService.fs" />
+    <Compile Include="ViewModels/ViewModelBase.fs" />
+    <Compile Include="ViewModels/HostRecordViewModel.fs" />
+    <Compile Include="ViewModels/ManageHostsViewModel.fs" />
+    <Compile Include="ViewModels/SettingsViewModel.fs" />
+    <Compile Include="ViewModels/LandingViewModel.fs" />
+    <Compile Include="ViewModels/MainWindowViewModel.fs" />
+    <Compile Include="Views/LandingView.axaml.fs" />
+    <Compile Include="Views/ManageHostsView.axaml.fs" />
+    <Compile Include="Views/SettingsView.axaml.fs" />
+    <Compile Include="Views/HostRecordDialog.axaml.fs" />
+    <Compile Include="Views/MainWindow.axaml.fs" />
+    <Compile Include="App.axaml.fs" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+</Project>

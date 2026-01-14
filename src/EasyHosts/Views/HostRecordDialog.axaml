@@ -1,0 +1,71 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:EasyHosts.ViewModels"
+        x:Class="EasyHosts.Views.HostRecordDialog"
+        x:DataType="vm:HostRecordViewModel"
+        Title="Host Record"
+        Width="450"
+        Height="350"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False">
+    
+    <Grid RowDefinitions="*,Auto" Margin="24">
+        <!-- Form -->
+        <StackPanel Grid.Row="0" Spacing="16">
+            <TextBlock Text="Host Record Details" 
+                       FontSize="20" 
+                       FontWeight="SemiBold"/>
+            
+            <StackPanel Spacing="8">
+                <TextBlock Text="IP Address:" FontWeight="SemiBold"/>
+                <TextBox Name="IpAddressTextBox"
+                         Text="{Binding IpAddress}"
+                         Watermark="e.g., 127.0.0.1 or ::1"/>
+            </StackPanel>
+            
+            <StackPanel Spacing="8">
+                <TextBlock Text="Hostname:" FontWeight="SemiBold"/>
+                <TextBox Name="HostnameTextBox"
+                         Text="{Binding Hostname}"
+                         Watermark="e.g., localhost or example.local"/>
+            </StackPanel>
+            
+            <StackPanel Spacing="8">
+                <TextBlock Text="Comment (optional):" FontWeight="SemiBold"/>
+                <TextBox Name="CommentTextBox"
+                         Text="{Binding Comment}"
+                         Watermark="Optional comment for this entry"/>
+            </StackPanel>
+            
+            <CheckBox IsChecked="{Binding IsEnabled}"
+                      Content="Enabled"
+                      Margin="0,8,0,0"/>
+            
+            <!-- Validation message -->
+            <Border Name="ValidationBorder"
+                    Background="#FFEBE9"
+                    CornerRadius="4"
+                    Padding="12,8"
+                    IsVisible="False">
+                <TextBlock Name="ValidationMessage"
+                           Foreground="#CF222E"
+                           TextWrapping="Wrap"/>
+            </Border>
+        </StackPanel>
+        
+        <!-- Buttons -->
+        <StackPanel Grid.Row="1" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Right"
+                    Spacing="8"
+                    Margin="0,16,0,0">
+            <Button Name="CancelButton" 
+                    Content="Cancel" 
+                    Width="80"/>
+            <Button Name="SaveButton" 
+                    Content="Save" 
+                    Width="80"
+                    Classes="accent"/>
+        </StackPanel>
+    </Grid>
+</Window>

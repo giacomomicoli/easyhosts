@@ -1,0 +1,109 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:EasyHosts.ViewModels"
+             x:Class="EasyHosts.Views.ManageHostsView"
+             x:DataType="vm:ManageHostsViewModel">
+    
+    <Grid RowDefinitions="Auto,*,Auto">
+        <!-- Toolbar -->
+        <Border Grid.Row="0" 
+                Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}"
+                Padding="16,12">
+            <Grid ColumnDefinitions="*,Auto">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button Name="AddButton" 
+                            Content="➕ Add Record" 
+                            Classes="accent"/>
+                    <Button Name="EditButton" 
+                            Content="✏️ Edit"
+                            IsEnabled="{Binding HasSelection}"/>
+                    <Button Name="RemoveButton" 
+                            Content="🗑️ Remove"
+                            IsEnabled="{Binding HasSelection}"/>
+                    <Button Name="ToggleButton" 
+                            Content="🔄 Toggle"
+                            IsEnabled="{Binding HasSelection}"
+                            ToolTip.Tip="Enable or disable the selected record"/>
+                </StackPanel>
+                
+                <Button Grid.Column="1" 
+                        Name="RefreshButton"
+                        Content="🔃 Refresh"/>
+            </Grid>
+        </Border>
+        
+        <!-- Host Records List -->
+        <Border Grid.Row="1" Margin="16">
+            <DataGrid Name="HostsDataGrid"
+                      ItemsSource="{Binding Records}"
+                      SelectedItem="{Binding SelectedRecord}"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      CanUserResizeColumns="True"
+                      CanUserSortColumns="True"
+                      GridLinesVisibility="Horizontal"
+                      BorderThickness="1"
+                      BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
+                      CornerRadius="8">
+                <DataGrid.Columns>
+                    <DataGridCheckBoxColumn Header="Enabled" 
+                                           Binding="{Binding IsEnabled}" 
+                                           Width="80"/>
+                    <DataGridTextColumn Header="IP Address" 
+                                       Binding="{Binding IpAddress}" 
+                                       Width="150"/>
+                    <DataGridTextColumn Header="Hostname" 
+                                       Binding="{Binding Hostname}" 
+                                       Width="*"/>
+                    <DataGridTextColumn Header="Comment" 
+                                       Binding="{Binding Comment}" 
+                                       Width="200"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+        
+        <!-- Status Bar -->
+        <Border Grid.Row="2" 
+                Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}"
+                Padding="16,8">
+            <Grid ColumnDefinitions="*,Auto">
+                <StackPanel Orientation="Horizontal" Spacing="16">
+                    <!-- Loading indicator -->
+                    <StackPanel Orientation="Horizontal" 
+                                Spacing="8"
+                                IsVisible="{Binding IsLoading}">
+                        <ProgressBar IsIndeterminate="True" 
+                                    Width="100"
+                                    Height="4"/>
+                        <TextBlock Text="Loading..." 
+                                  VerticalAlignment="Center"
+                                  Opacity="0.7"/>
+                    </StackPanel>
+                    
+                    <!-- Status message -->
+                    <TextBlock Text="{Binding StatusMessage}" 
+                              VerticalAlignment="Center"
+                              IsVisible="{Binding !IsLoading}"/>
+                </StackPanel>
+                
+                <!-- Error message -->
+                <Border Grid.Column="1"
+                        Background="#FFEBE9"
+                        CornerRadius="4"
+                        Padding="12,6"
+                        IsVisible="{Binding HasError}">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <TextBlock Text="⚠️" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding ErrorMessage}" 
+                                  Foreground="#CF222E"
+                                  VerticalAlignment="Center"/>
+                        <Button Name="ClearErrorButton"
+                                Content="✕" 
+                                Padding="4,2"
+                                FontSize="10"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

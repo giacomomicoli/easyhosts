@@ -1,0 +1,177 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:EasyHosts.ViewModels"
+             x:Class="EasyHosts.Views.SettingsView"
+             x:DataType="vm:SettingsViewModel">
+    
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="24" Spacing="24">
+            
+            <!-- Backup Settings Section -->
+            <Border Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}"
+                    CornerRadius="8"
+                    Padding="20">
+                <StackPanel Spacing="16">
+                    <TextBlock Text="Backup Settings" 
+                               FontSize="20" 
+                               FontWeight="SemiBold"/>
+                    
+                    <CheckBox IsChecked="{Binding BackupEnabled}"
+                              Content="Enable backup functionality"/>
+                    
+                    <CheckBox IsChecked="{Binding AutoBackupOnChange}"
+                              Content="Automatically backup before making changes"/>
+                    
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Backup Location:" FontWeight="SemiBold"/>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBox Text="{Binding BackupLocation}"
+                                    Watermark="Enter backup folder path..."/>
+                            <Button Grid.Column="1" 
+                                    Name="BrowseButton"
+                                    Content="Browse..."
+                                    Margin="8,0,0,0"/>
+                        </Grid>
+                    </StackPanel>
+                    
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Button Name="CreateBackupButton" 
+                                Content="📦 Create Backup Now"
+                                Classes="accent"/>
+                        <Button Name="ResetSettingsButton" 
+                                Content="🔄 Reset to Defaults"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+            
+            <!-- Backups List Section -->
+            <Border Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}"
+                    CornerRadius="8"
+                    Padding="20">
+                <StackPanel Spacing="16">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <TextBlock Text="Available Backups" 
+                                   FontSize="20" 
+                                   FontWeight="SemiBold"
+                                   VerticalAlignment="Center"/>
+                        <Button Grid.Column="1" 
+                                Name="RefreshBackupsButton"
+                                Content="🔃 Refresh"/>
+                    </Grid>
+                    
+                    <ListBox Name="BackupsListBox"
+                             ItemsSource="{Binding Backups}"
+                             SelectedItem="{Binding SelectedBackup}"
+                             MinHeight="150"
+                             MaxHeight="300">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ColumnDefinitions="*,Auto,Auto" Margin="8,4">
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding FileName}" 
+                                                   FontWeight="SemiBold"/>
+                                        <TextBlock Text="{Binding CreatedAt, StringFormat='{}{0:yyyy-MM-dd HH:mm:ss}'}"
+                                                   FontSize="12"
+                                                   Opacity="0.7"/>
+                                    </StackPanel>
+                                    <TextBlock Grid.Column="1"
+                                               Text="{Binding RecordCount, StringFormat='{}{0} records'}"
+                                               VerticalAlignment="Center"
+                                               Margin="16,0"
+                                               Opacity="0.7"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Button Name="RestoreBackupButton" 
+                                Content="♻️ Restore Selected"
+                                IsEnabled="{Binding HasBackupSelection}"/>
+                        <Button Name="DeleteBackupButton" 
+                                Content="🗑️ Delete Selected"
+                                IsEnabled="{Binding HasBackupSelection}"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+            
+            <!-- Permissions Section -->
+            <Border Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}"
+                    CornerRadius="8"
+                    Padding="20">
+                <StackPanel Spacing="16">
+                    <TextBlock Text="Permissions" 
+                               FontSize="20" 
+                               FontWeight="SemiBold"/>
+                    
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <TextBlock Text="Status:" 
+                                   FontWeight="SemiBold"
+                                   VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="1"
+                                   Text="{Binding PermissionStatus}"
+                                   Margin="8,0"
+                                   VerticalAlignment="Center"/>
+                        <Button Grid.Column="2"
+                                Name="RequestAdminButton"
+                                Content="🛡️ Run as Administrator"
+                                IsVisible="{Binding !IsAdmin}"/>
+                    </Grid>
+                    
+                    <Border Background="{DynamicResource SystemAccentColorLight3}"
+                            CornerRadius="6"
+                            Padding="12"
+                            IsVisible="{Binding !IsAdmin}">
+                        <TextBlock Text="ℹ️ Some operations require administrator privileges. Click the button above to restart with elevated permissions."
+                                   TextWrapping="Wrap"
+                                   FontSize="13"/>
+                    </Border>
+                </StackPanel>
+            </Border>
+            
+            <!-- Status Bar -->
+            <Border Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}"
+                    CornerRadius="8"
+                    Padding="16,12">
+                <Grid ColumnDefinitions="*,Auto">
+                    <StackPanel Orientation="Horizontal" Spacing="16">
+                        <!-- Loading indicator -->
+                        <StackPanel Orientation="Horizontal" 
+                                    Spacing="8"
+                                    IsVisible="{Binding IsLoading}">
+                            <ProgressBar IsIndeterminate="True" 
+                                        Width="100"
+                                        Height="4"/>
+                            <TextBlock Text="Processing..." 
+                                      VerticalAlignment="Center"
+                                      Opacity="0.7"/>
+                        </StackPanel>
+                        
+                        <!-- Status message -->
+                        <TextBlock Text="{Binding StatusMessage}" 
+                                  VerticalAlignment="Center"
+                                  IsVisible="{Binding !IsLoading}"/>
+                    </StackPanel>
+                    
+                    <!-- Error message -->
+                    <Border Grid.Column="1"
+                            Background="#FFEBE9"
+                            CornerRadius="4"
+                            Padding="12,6"
+                            IsVisible="{Binding HasError}">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Text="⚠️" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding ErrorMessage}" 
+                                      Foreground="#CF222E"
+                                      VerticalAlignment="Center"/>
+                            <Button Name="ClearErrorButton"
+                                    Content="✕" 
+                                    Padding="4,2"
+                                    FontSize="10"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
